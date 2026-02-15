@@ -2,43 +2,38 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SYSTEM BREACH</title>
+<title>⚠ SYSTEM BREACH ⚠</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
 html, body {
-    margin:0;
-    padding:0;
-    width:100%;
-    height:100%;
-    background:black;
-    color:#00ff00;
+    margin:0; padding:0;
+    width:100vw; height:100vh;
+    background:black; color:#00ff00;
     font-family:monospace;
     overflow:hidden;
 }
-body.fullscreen { width:100vw; height:100vh; }
+body.fullscreen { width:100vw; height:100vh; overflow:hidden; }
 
-/* Background glitch */
-body::before {
-    content:"";
-    position:fixed;
-    width:100%;
-    height:100%;
-    background:url('https://i.imgur.com/8QZ7Z9F.gif');
-    opacity:0.1;
-    z-index:-1;
+#startBtn {
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    font-size:24px; padding:20px 30px; background:red; color:white; border:none; border-radius:10px;
+    cursor:pointer;
+    z-index:9999;
 }
 
-#main { text-align:center; margin-top:50px; font-size:24px; animation:flicker 0.1s infinite; }
-@keyframes flicker { 0%{opacity:1;}50%{opacity:0.8;}100%{opacity:1;} }
+#main { text-align:center; margin-top:50px; font-size:24px; animation:flicker 0.1s infinite; color:#00ff00; display:none; }
+@keyframes flicker {0%{opacity:1;}50%{opacity:0.8;}100%{opacity:1;}}
 
-.warning { font-size:32px; margin-top:20px; animation:flash 0.5s infinite; font-weight:bold; }
+.warning { font-size:28px; margin-top:20px; animation:flash 0.5s infinite; font-weight:bold; display:none; }
 .warning.red{color:red;} .warning.orange{color:orange;} .warning.yellow{color:yellow;}
 @keyframes flash{0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
 
-#terminal{position:absolute; bottom:20px; left:20px; width:90%; height:150px; border:1px solid #00ff00; padding:10px; font-size:16px; overflow:hidden;}
+#terminal{position:absolute; bottom:20px; left:10px; width:95%; height:150px; border:1px solid #00ff00; padding:10px; font-size:16px; overflow:hidden; display:none;}
 
 .tab {
-    position:absolute; width:280px; height:150px; border:2px solid white; padding:10px; color:white; font-weight:bold;
-    text-align:center; font-size:18px; border-radius:8px;
+    position:absolute; width:280px; height:160px; border-radius:10px;
+    padding:15px; color:white; font-weight:bold; text-align:center; font-size:18px;
+    box-shadow:0 0 15px #ff0000; display:none;
 }
 
 .vibrate{animation:vibrate 0.1s infinite;}
@@ -47,13 +42,23 @@ body::before {
 .shake{animation:shake 0.2s infinite;}
 @keyframes shake{0%{transform:translate(2px,2px);}50%{transform:translate(-2px,-2px);}100%{transform:translate(2px,-2px);}}
 
-#countdown { position:absolute; top:20px; right:20px; font-size:28px; color:red; font-weight:bold; }
+#countdown { position:absolute; top:20px; right:20px; font-size:28px; color:red; font-weight:bold; display:none; }
+
+.alert-icon {
+    display:inline-block; width:20px; height:20px;
+    background:red; border-radius:50%;
+    margin-right:10px;
+    animation:blink 0.5s infinite;
+}
+@keyframes blink {0%,50%,100%{opacity:1;}25%,75%{opacity:0;}}
 </style>
 </head>
 <body>
 
+<button id="startBtn">Start System Check</button>
+
 <div id="main">
-  <h1 class="warning red">⚠ SYSTEM SECURITY BREACH ⚠</h1>
+  <h1 class="warning red"><span class="alert-icon"></span>SYSTEM SECURITY BREACH ⚠</h1>
   <div class="warning orange">UNAUTHORIZED ACCESS DETECTED</div>
   <div class="warning yellow">BANK CONNECTION COMPROMISED</div>
   <div class="warning red">PROCESSING TRANSACTION...</div>
@@ -61,98 +66,100 @@ body::before {
 
 <div id="terminal"><span id="typing"></span></div>
 <div id="countdown"></div>
+<audio id="alarm" src="https://www.soundjay.com/button/beep-07.wav"></audio>
 
 <script>
-const typing = document.getElementById("typing");
-const messages = [
-  "Connecting to bank server...",
-  "Bypassing firewall...",
-  "Injecting payload...",
-  "Access granted.",
-  "Retrieving account data...",
-  "Transaction initiated...",
-  "Deducting funds...",
-  "ERROR: USER PANIC LEVEL RISING 😈"
-];
+const startBtn = document.getElementById("startBtn");
+startBtn.addEventListener("click", () => {
+    // Hide button
+    startBtn.style.display = "none";
 
-let i = 0;
-function typeMessage(){
-    if(i<messages.length){
-        typing.innerHTML+=messages[i]+"<br>";
-        i++;
-        setTimeout(typeMessage,700);
+    // Fullscreen (mobile browser)
+    document.documentElement.requestFullscreen().catch(()=>{});
+
+    // Vibration (if supported)
+    if(navigator.vibrate){ navigator.vibrate([300,100,300,100,300]); }
+
+    // Show main elements
+    document.getElementById("main").style.display="block";
+    document.getElementById("terminal").style.display="block";
+    document.getElementById("countdown").style.display="block";
+
+    // Play alarm
+    document.getElementById("alarm").play();
+
+    // Terminal typing
+    const typing = document.getElementById("typing");
+    const messages = [
+      "Connecting to bank server...",
+      "Bypassing firewall...",
+      "Injecting payload...",
+      "Access granted.",
+      "Retrieving account data...",
+      "Transaction initiated...",
+      "Deducting funds...",
+      "ERROR: USER PANIC LEVEL RISING 😈"
+    ];
+    let i=0;
+    function typeMessage(){
+        if(i<messages.length){
+            typing.innerHTML+=messages[i]+"<br>";
+            i++;
+            setTimeout(typeMessage,700);
+        }
     }
-}
-typeMessage();
+    typeMessage();
 
-function createTab(text,color,x,y){
-    const tab=document.createElement("div");
-    tab.className="tab vibrate";
-    tab.style.left=x+"px";
-    tab.style.top=y+"px";
-    tab.style.backgroundColor=color;
-    tab.innerHTML=text;
-    document.body.appendChild(tab);
-    randomMove(tab);
-    return tab;
-}
+    // Fake bank balance
+    let balance = 100000;
+    function showBalance(){ return "Balance: Rs. "+balance.toLocaleString(); }
 
-function randomMove(tab){
-    setInterval(()=>{
-        const x=Math.random()*(window.innerWidth-300);
-        const y=Math.random()*(window.innerHeight-200);
-        tab.style.left=x+"px";
-        tab.style.top=y+"px";
-    },700);
-}
-
-// Full screen
-function goFullscreen(){document.documentElement.requestFullscreen().catch(()=>{});document.body.classList.add("fullscreen");}
-
-// Block keys
-function blockKeys(){
-    window.addEventListener("keydown",function(e){
-        if(["Backspace","Escape","F5"].includes(e.key)){ e.preventDefault(); }
-    });
-}
-
-// Fake bank balance
-let balance = 100000; // starting balance
-function showBalance(){
-    return "Balance: Rs. "+balance.toLocaleString();
-}
-
-// Countdown timer
-let countdown = 10;
-const countdownEl = document.getElementById("countdown");
-function startCountdown(){
+    // Countdown timer
+    let countdown=10;
+    const countdownEl=document.getElementById("countdown");
     countdownEl.innerText="Closing in "+countdown+"s";
     const cdInt = setInterval(()=>{
         countdown--;
         countdownEl.innerText="Closing in "+countdown+"s";
         if(countdown<=0){ clearInterval(cdInt); countdownEl.innerText=""; }
     },1000);
-}
 
-// Start prank
-setTimeout(()=>{
+    // Tabs
+    function createTab(text,color,x,y){
+        const tab=document.createElement("div");
+        tab.className="tab vibrate";
+        tab.style.left=x+"px";
+        tab.style.top=y+"px";
+        tab.style.backgroundColor=color;
+        tab.innerHTML=text;
+        document.body.appendChild(tab);
+        tab.style.display="block";
+        randomMove(tab);
+        return tab;
+    }
+    function randomMove(tab){
+        setInterval(()=>{
+            const x=Math.random()*(window.innerWidth-300);
+            const y=Math.random()*(window.innerHeight-200);
+            tab.style.left=x+"px";
+            tab.style.top=y+"px";
+        },700);
+    }
+
+    createTab("⚠ Rs. 50,000 Deducted ⚠<br>"+showBalance(),"red",50,80);
+    balance-=50000;
+    createTab("⚠ Rs. 25,000 Deducted ⚠<br>"+showBalance(),"orange",400,120);
+    balance-=25000;
+    createTab("⚠ Rs. 10,000 Deducted ⚠<br>"+showBalance(),"yellow",750,60);
+    balance-=10000;
+    createTab("⚠ Account Locked ⚠<br>"+showBalance(),"purple",200,320);
+    createTab("⚠ Suspicious Login Detected ⚠<br>"+showBalance(),"blue",600,320);
+
+    // Shake screen
     document.body.classList.add("shake");
-    goFullscreen();
-    blockKeys();
-    startCountdown();
 
-    // Tabs with fake deductions
-    createTab("⚠ Rs. 50,000 Deducted ⚠\n"+showBalance(),"red",50,80);
-    balance -=50000;
-    createTab("⚠ Rs. 25,000 Deducted ⚠\n"+showBalance(),"orange",400,120);
-    balance -=25000;
-    createTab("⚠ Rs. 10,000 Deducted ⚠\n"+showBalance(),"yellow",750,60);
-    balance -=10000;
-    createTab("⚠ Account Locked ⚠\n"+showBalance(),"purple",200,320);
-    createTab("⚠ Suspicious Login Detected ⚠\n"+showBalance(),"blue",600,320);
-
-},2500);
-
+});
 </script>
+
 </body>
 </html>
