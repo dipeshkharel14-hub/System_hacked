@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SYSTEM BREACH</title>
+
+<style>
+    body {
+        margin: 0;
+        background: black;
+        color: #00ff00;
+        font-family: monospace;
+        overflow: hidden;
+    }
+
+    /* Background glitch */
+    body::before {
+        content: "";
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: url('https://i.imgur.com/8QZ7Z9F.gif');
+        opacity: 0.15;
+        z-index: -1;
+    }
+
+    #main {
+        text-align: center;
+        margin-top: 80px;
+        font-size: 24px;
+        animation: flicker 0.1s infinite;
+    }
+
+    @keyframes flicker {
+        0% { opacity: 1; }
+        50% { opacity: 0.8; }
+        100% { opacity: 1; }
+    }
+
+    .warning {
+        color: red;
+        font-size: 32px;
+        margin-top: 40px;
+        animation: flash 0.5s infinite;
+    }
+
+    @keyframes flash {
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    /* Fake terminal */
+    #terminal {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        width: 90%;
+        height: 150px;
+        border: 1px solid #00ff00;
+        padding: 10px;
+        font-size: 16px;
+        overflow: hidden;
+    }
+
+    /* Popup tabs */
+    .tab {
+        position: absolute;
+        width: 300px;
+        height: 180px;
+        background: black;
+        border: 2px solid red;
+        color: white;
+        padding: 10px;
+        animation: popup 0.3s ease-out;
+    }
+
+    @keyframes popup {
+        from { transform: scale(0); }
+        to { transform: scale(1); }
+    }
+
+    /* Screen shake */
+    .shake {
+        animation: shake 0.2s infinite;
+    }
+
+    @keyframes shake {
+        0% { transform: translate(2px, 2px); }
+        50% { transform: translate(-2px, -2px); }
+        100% { transform: translate(2px, -2px); }
+    }
+</style>
+</head>
+
+<body>
+
+<div id="main">
+    <h1>⚠ SYSTEM SECURITY BREACH ⚠</h1>
+    <div class="warning">UNAUTHORIZED ACCESS DETECTED</div>
+    <div class="warning">BANK CONNECTION COMPROMISED</div>
+    <div class="warning">PROCESSING TRANSACTION...</div>
+</div>
+
+<div id="terminal">
+    <span id="typing"></span>
+</div>
+
+<script>
+    const typing = document.getElementById("typing");
+
+    const messages = [
+        "Connecting to bank server...",
+        "Bypassing firewall...",
+        "Injecting payload...",
+        "Access granted.",
+        "Retrieving account data...",
+        "Transaction initiated...",
+        "Deducting funds...",
+        "ERROR: USER PANIC LEVEL RISING 😈"
+    ];
+
+    let i = 0;
+
+    function typeMessage() {
+        if (i < messages.length) {
+            typing.innerHTML += messages[i] + "<br>";
+            i++;
+            setTimeout(typeMessage, 700);
+        }
+    }
+
+    typeMessage();
+
+    /* Create fake tabs */
+    function createTab(text, x, y) {
+        const tab = document.createElement("div");
+        tab.className = "tab";
+        tab.style.left = x + "px";
+        tab.style.top = y + "px";
+        tab.innerHTML = "<h3>⚠ ALERT ⚠</h3>" + text;
+        document.body.appendChild(tab);
+    }
+
+    setTimeout(() => {
+        document.body.classList.add("shake");
+
+        createTab("Rs. 50,000 Deducted", 50, 80);
+        createTab("Account Locked", 400, 120);
+        createTab("Suspicious Login", 750, 60);
+        createTab("Tracing Location...", 200, 320);
+        createTab("Reporting to Authority", 600, 320);
+
+    }, 2500);
+
+</script>
+
+</body>
+</html>
